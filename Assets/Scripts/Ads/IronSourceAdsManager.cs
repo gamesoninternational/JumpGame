@@ -13,12 +13,18 @@ public class IronSourceAdsManager : MonoBehaviour
     string appKey = "unexpected_platform";
 #endif
     public TextMeshProUGUI totalCoinsTxt;
+
+    public TextMeshProUGUI txtAds;
+
     private void Start()
     {
         totalCoinsTxt.text = PlayerPrefs.GetInt("totalCoins").ToString();
 
         IronSource.Agent.validateIntegration();
         IronSource.Agent.init(appKey);
+
+        LoadRewarded();
+        LoadBanner();
     }
 
     private void OnEnable()
@@ -180,11 +186,13 @@ public class IronSourceAdsManager : MonoBehaviour
     // This replaces the RewardedVideoAvailabilityChangedEvent(true) event
     void RewardedVideoOnAdAvailable(IronSourceAdInfo adInfo)
     {
+        txtAds.text = "Ads Ready";
     }
     // Indicates that no ads are available to be displayed
     // This replaces the RewardedVideoAvailabilityChangedEvent(false) event
     void RewardedVideoOnAdUnavailable()
     {
+        txtAds.text = "Ads Unavailable";
     }
     // The Rewarded Video ad view has opened. Your activity will loose focus.
     void RewardedVideoOnAdOpenedEvent(IronSourceAdInfo adInfo)
@@ -193,6 +201,7 @@ public class IronSourceAdsManager : MonoBehaviour
     // The Rewarded Video ad view is about to be closed. Your activity will regain its focus.
     void RewardedVideoOnAdClosedEvent(IronSourceAdInfo adInfo)
     {
+        LoadRewarded();
     }
     // The user completed to watch the video, and should be rewarded.
     // The placement parameter will include the reward data.
